@@ -1,5 +1,5 @@
 const express = require("express");
-const path = require("path");
+const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
@@ -51,6 +51,18 @@ if (process.env.NODE_ENV === "production") {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    },
+  })
+);
 
 app.use(
   cors({

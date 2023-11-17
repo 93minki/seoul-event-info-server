@@ -5,6 +5,7 @@ const User = require("../models/user");
 exports.verfiyLoginUser = (req, res, next) => {
   const accessToken = req.header("Authorization").split(" ")[1];
   const refreshToken = req.cookies.rt;
+  console.log("cookies??", req.cookies);
 
   // 로그인 상태를 검증하는 것이기 때문에, at, rt 하나라도 문제 있으면 오류임
   if (!accessToken || !refreshToken) {

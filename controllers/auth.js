@@ -70,6 +70,7 @@ exports.signIn = async (req, res, next) => {
             issuer: "mk",
           }
         );
+        req.session.user = { ...exUser };
         res
           .cookie("rt", refreshToken, {
             // path: "/",
@@ -88,4 +89,16 @@ exports.signIn = async (req, res, next) => {
     console.error(error);
     next(error);
   }
+};
+
+exports.authCheck = async (req, res, next) => {
+  console.log("실행되냐");
+  const sessionId = req.cookies["session-cookie"];
+  console.log("session?", req.cookies.rt);
+  console.log("sessionId?", sessionId);
+
+  return res.json({
+    code: 200,
+    message: "테스트 중",
+  });
 };
