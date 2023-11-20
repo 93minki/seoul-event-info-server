@@ -58,15 +58,17 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     cookie: {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production",
     },
+    maxAge: 60 * 60 * 1000,
+    name: "sessionId",
   })
 );
 
 app.use(
   cors({
-    origin: true,
+    origin: "http://localhost:3000",
+    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     credentials: true,
   })
 );

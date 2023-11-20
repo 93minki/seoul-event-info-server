@@ -70,13 +70,12 @@ exports.signIn = async (req, res, next) => {
             issuer: "mk",
           }
         );
-        req.session.user = { ...exUser };
+        req.session.user = exUser;
         res
           .cookie("rt", refreshToken, {
             // path: "/",
             httpOnly: true,
             secure: true,
-            sameSite: "none",
           })
           .json({
             code: 200,
@@ -92,13 +91,18 @@ exports.signIn = async (req, res, next) => {
 };
 
 exports.authCheck = async (req, res, next) => {
-  console.log("실행되냐");
-  const sessionId = req.cookies["session-cookie"];
-  console.log("session?", req.cookies.rt);
-  console.log("sessionId?", sessionId);
-
-  return res.json({
-    code: 200,
-    message: "테스트 중",
-  });
+  console.log("req", req);
+  if (req.session.user) {
+    console.log("세션 존재함");
+    return res.json({
+      code: 200,
+      message: "세션에 존재하는 사용자임",
+    });
+  } else {
+    console.log("세션 없음");
+    return res.json({
+      code: 404,
+      message: "뉘슈",
+    });
+  }
 };
