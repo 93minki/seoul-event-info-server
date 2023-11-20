@@ -6,6 +6,8 @@ exports.verfiyLoginUser = (req, res, next) => {
   const accessToken = req.header("Authorization").split(" ")[1];
   const refreshToken = req.cookies.rt;
 
+  console.log("middleware RT", refreshToken, "session", req.cookies.sessionId);
+
   // 로그인 상태를 검증하는 것이기 때문에, at, rt 하나라도 문제 있으면 오류임
   if (!accessToken || !refreshToken) {
     return res.json({
@@ -84,6 +86,7 @@ exports.verfiyLoginUser = (req, res, next) => {
                       at: newAccessToken,
                     };
                     res.cookie("rt", newRefreshToken, {
+                      path: "/",
                       httpOnly: true,
                       secure: true,
                       sameSite: "none",
@@ -162,6 +165,7 @@ exports.verfiyLoginUser = (req, res, next) => {
                   user,
                 };
                 res.cookie("rt", newRefreshToken, {
+                  path: "/",
                   httpOnly: true,
                   secure: true,
                   sameSite: "none",
@@ -209,9 +213,9 @@ exports.verfiyLoginUser = (req, res, next) => {
                 res.locals.user = {
                   code: 200,
                   user,
-                  at: newAccessToken,
                 };
                 res.cookie("rt", newRefreshToken, {
+                  path: "/",
                   httpOnly: true,
                   secure: true,
                   sameSite: "none",

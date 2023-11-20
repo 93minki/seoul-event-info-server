@@ -18,6 +18,7 @@ const v2 = require("./routes/v2");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
 const comment = require("./routes/comment");
+const session = require("express-session");
 const app = express();
 app.set("port", process.env.PORT || 3030);
 
@@ -52,6 +53,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    name: "sessionId",
+    cookie: {
+      path: "/",
+      httpOnly: true,
+      secure: false,
+      // sameSite: "none",
+    },
+  })
+);
 app.use(
   cors({
     origin: true,

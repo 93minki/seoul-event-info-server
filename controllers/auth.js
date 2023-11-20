@@ -30,6 +30,7 @@ exports.signUp = async (req, res, next) => {
 
 exports.signIn = async (req, res, next) => {
   const { email, password } = req.body;
+  console.log("signIn cookie", req.cookies.rt);
   try {
     const exUser = await User.findOne({ where: { email } });
     if (!exUser) {
@@ -70,12 +71,14 @@ exports.signIn = async (req, res, next) => {
             issuer: "mk",
           }
         );
+        req.session.user = exUser;
+
         res
           .cookie("rt", refreshToken, {
-            // path: "/",
+            path: "/",
             httpOnly: true,
             secure: true,
-            sameSite: "none",
+            sameSite: 'none'
           })
           .json({
             code: 200,
@@ -88,4 +91,19 @@ exports.signIn = async (req, res, next) => {
     console.error(error);
     next(error);
   }
+};
+
+exports.authCheck = async (req, res, next) => {
+  console.log("request?", req.cookies);
+  console.log(
+    "request cookie RT: ",
+    req.cookies.rt,
+    "sessionId: ",
+    req.cookies.sessionId
+  );
+
+  return res.json({
+    code: 200,
+    message: "테스트 중",
+  });
 };
